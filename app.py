@@ -1,4 +1,7 @@
-"""Plantilla: servicio web para el modelo de precios de casas en California.
+"""
+Ejercicio realizado por: Alex Pascual y Javier Bejan
+
+Plantilla: servicio web para el modelo de precios de casas en California.
 
 Solo tienes que completar las partes marcadas con TODO.
 El resto del código ya está hecho.
