@@ -1,11 +1,7 @@
 """
 Ejercicio realizado por: Alex Pascual y Javier Bejan
 
-Plantilla: servicio web para el modelo de precios de casas en California.
-
-Solo tienes que completar las partes marcadas con TODO.
-El resto del código ya está hecho.
-Autores: <nombre1>, <nombre2>
+Servicio web (FastAPI) para el modelo de precios de casas en California.
 
 Ejecución en local (con modelo_california.pkl generado en el ejercicio 1):
     uvicorn app:app --reload
@@ -22,8 +18,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 MODEL_PATH = "modelo_california.pkl"
-# TODO: URL "raw" del modelo en TU repositorio de GitHub. Formato:
-# https://raw.githubusercontent.com/<usuario>/<repositorio>/main/modelo_california.pkl
+# URL "raw" del modelo en el repositorio público de GitHub
 MODEL_URL = "https://raw.githubusercontent.com/Mister1210/prediccion-california/main/modelo_california.pkl"
 DOWNLOAD_TIMEOUT = 30  # segundos
 
@@ -49,6 +44,7 @@ def download_model(url: str = MODEL_URL, path: str = MODEL_PATH):
     response.raise_for_status()
     with open(path, "wb") as f:
         f.write(response.content)
+    print(f"Modelo descargado en {path}")
 
 
 def load_model(path: str = MODEL_PATH):
@@ -77,7 +73,7 @@ def health():
 
 @app.post("/predict")
 def predict(features: HouseFeatures):
-    """Devuelve el precio medio estimado (en cientos de miles de dólares)."""
+    """Devuelve el precio medio estimado de la vivienda (en dólares)."""
     model = state["model"]
     if model is None:
         raise HTTPException(status_code=503, detail="Modelo no cargado")
