@@ -87,15 +87,12 @@ DEFAULTS = {
 
 
 def find_missing(payload: dict) -> list[str]:
-    """Devuelve las variables de FEATURE_NAMES que faltan en `payload`.
-
-    TODO 2 (apartado b): una variable falta si su clave no está en el
-    diccionario o si vale None.
-    Pista: recorre FEATURE_NAMES y comprueba `payload.get(nombre) is None`.
-    Ojo: no uses `if not valor`, porque 0.0 es un valor válido.
-    """
-    raise NotImplementedError("Completa el TODO 2: find_missing()")
-
+    """Devuelve las variables de FEATURE_NAMES que faltan en `payload`."""
+    faltantes = []
+    for nombre in FEATURE_NAMES:
+        if payload.get(nombre) is None:
+            faltantes.append(nombre)
+    return faltantes
 
 def format_price(med_house_val: float) -> str:
     """Convierte la salida del modelo a un texto legible en dólares.
