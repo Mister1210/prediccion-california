@@ -95,14 +95,9 @@ def find_missing(payload: dict) -> list[str]:
     return faltantes
 
 def format_price(med_house_val: float) -> str:
-    """Convierte la salida del modelo a un texto legible en dólares.
-
-    TODO 3 (apartado c): la variable objetivo está en cientos de miles de
-    dólares, así que 4.53 debe convertirse en "$453,000".
-    Pistas: multiplica por 100_000; para el texto usa un f-string con el
-    formato de miles de Python, f"${precio:,.0f}".
-    """
-    raise NotImplementedError("Completa el TODO 3: format_price()")
+    """Convierte la salida del modelo a un texto legible en dólares."""
+    precio = med_house_val * 100000
+    return f"${precio:,.0f}"
 
 
 # ---------------------------------------------------------------- Interfaz --
@@ -173,14 +168,9 @@ if st.button("Estimar precio"):
         logger.info("POST %s/predict -> HTTP %s en %.0f ms", api_url, response.status_code, elapsed_ms)
         if response.status_code == 200:
             med_house_val = response.json()["MedHouseVal"]
-            # Valor SIN formatear (cientos de miles de $), para poder probar la
-            # app antes de hacer el apartado c.
-            st.metric("Valor devuelto por la API (sin formatear)", med_house_val)
-            # TODO 4 (apartados c y d): muestra el precio ya formateado.
-            # Pista: sustituye la línea st.metric de arriba por
-            # st.metric("Precio estimado", format_price(med_house_val))
-            # (o st.success). Opcional: deja un st.caption con el valor crudo
-            # de la API (entregable del apartado c).
+            # Entregable: mostramos el valor crudo y el precio final formateado
+            st.caption(f"Valor devuelto por la API (sin formatear): {med_house_val}")
+            st.metric("Precio estimado", format_price(med_house_val))
         else:
             # TODO 5b (apartado e): muestra UN solo st.error claro para
             # cualquier código distinto de 200 (422, 500...): indica el código
