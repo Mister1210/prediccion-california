@@ -120,13 +120,11 @@ med_inc = st.number_input(
 )
 # Hasta que completes el TODO 6, AveRooms usa un valor por defecto fijo
 # (mediana aproximada del dataset), así la petición lleva las 8 variables.
-ave_rooms = 5.2
-# TODO 6 (apartado d): sustituye el valor fijo de arriba por un campo de entrada
-# para el número de habitaciones: asigna a `ave_rooms` un st.number_input,
-# copiando el de ingreso medio, con
-#   etiqueta "Número medio de habitaciones por vivienda",
-#   min_value=1.0, max_value=15.0, value=5.2, step=0.1
-# (el payload de abajo ya usa `ave_rooms`; no hay que tocarlo).
+# TODO 6 (apartado d): campo de entrada para el número de habitaciones
+ave_rooms = st.number_input(
+    "Número medio de habitaciones por vivienda",
+    min_value=1.0, max_value=15.0, value=5.2, step=0.1,
+)
 
 if st.button("Estimar precio"):
     payload = {
