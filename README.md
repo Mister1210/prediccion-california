@@ -1,17 +1,47 @@
-# Despliegue de Modelo de IA - Precios de Viviendas en California
+# Predicción de Precios de Viviendas en California (Práctica 3)
 
-Autores: Alex Pascual y Javier Adrián Beján  
+**Autores:** Javier Adrian Bejan y Alex Pascual Perez  
+**Asignatura:** Inteligencia Artificial - 2º DAM Diurno  
 
-## Pasos del Despliegue
+Aplicación web desarrollada en **Streamlit** conectada a una API REST en **FastAPI** que estima el precio medio de las viviendas en California mediante un modelo de Machine Learning.
 
-1. **Creación de cuenta:** Registro y configuración de una cuenta gratuita en la plataforma de despliegue en la nube **Render**.
+## Enlaces desplegados (Render)
+* **Aplicación Web (Streamlit):** https://interfaz-california.onrender.com
+* **Servicio API (FastAPI):** https://prediccion-california.onrender.com
+* **Documentación interactiva (Swagger):** https://prediccion-california.onrender.com/docs
 
-3. **Configuración del repositorio:** Subida del código fuente de la aplicación (`app.py`, el modelo entrenado `modelo_california.pkl`
-   y el archivo de dependencias `requirements.txt`) a un repositorio público en **GitHub**.
+---
 
-4. **Configuración del servicio web:** Conexión del repositorio de GitHub con Render indicando el entorno de Python.
+## Documentación de la API
 
-5. **Comando de despliegue (Start Command):**  
-   `uvicorn app:app --host 0.0.0.0 --port $PORT`
+### Endpoint de predicción
+* **Método:** `POST`
+* **Ruta:** `/predict`
+* **Content-Type:** `application/json`
 
-6. **URL final del servicio:** [https://prediccion-california.onrender.com](https://prediccion-california.onrender.com)
+### Variables de entrada (JSON)
+El cuerpo de la petición debe incluir las siguientes 8 variables numéricas:
+
+| Variable | Tipo | Descripción |
+| :--- | :--- | :--- |
+| `MedInc` | `float` | Ingreso medio de la zona (en decenas de miles de dólares) |
+| `HouseAge` | `float` | Antigüedad media de las viviendas (años) |
+| `AveRooms` | `float` | Número medio de habitaciones por vivienda |
+| `AveBedrms` | `float` | Número medio de dormitorios por vivienda |
+| `Population` | `float` | Población total del bloque |
+| `AveOccup` | `float` | Ocupación media por vivienda |
+| `Latitude` | `float` | Latitud geográfica |
+| `Longitude` | `float` | Longitud geográfica |
+
+### Ejemplo de petición (`POST /predict`)
+```json
+{
+  "MedInc": 3.5,
+  "HouseAge": 29.0,
+  "AveRooms": 5.2,
+  "AveBedrms": 1.05,
+  "Population": 1166.0,
+  "AveOccup": 2.8,
+  "Latitude": 34.26,
+  "Longitude": -118.49
+}
