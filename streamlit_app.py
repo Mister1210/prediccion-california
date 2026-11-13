@@ -1,51 +1,3 @@
-"""Plantilla: aplicación Streamlit conectada a tu servicio de IA.
-
-Completa SOLO las partes marcadas con TODO (del 0 al 6; el 5 tiene subapartados
-a y b). El resto ya está hecho.
-Este es el único fichero de código que tienes que completar (además del README).
-Autores: <nombre1>, <nombre2>
-
-Qué hace la app: el usuario introduce 2 variables (ingreso medio y número de
-habitaciones); la app completa el resto con valores por defecto, comprueba que
-están las 8 variables, llama a la API (POST /predict), transforma la respuesta
-a dólares y la muestra.
-
-Dónde está cada apartado:
-    a) Conexión ............. TODO 0: URL de la API; TODO 1: la petición POST
-    b) Datos de entrada ..... TODO 2: find_missing()
-    c) Datos de salida ...... TODO 3: format_price(); TODO 4: mostrar el precio
-    d) Interfaz ............. TODO 6: campo de número de habitaciones
-    e) Control de errores ... TODO 5a: fallo de comunicación; TODO 5b: respuesta de error
-       (la documentación de la API va en el README)
-
-Ejecución en local (con la API en marcha):
-    pip install -r requirements.txt
-    streamlit run streamlit_app.py
-Los mensajes de log salen en la terminal desde la que lanzas Streamlit.
-La URL de la API se puede cambiar en la barra lateral. Por defecto (API_URL)
-es http://localhost:8000; para el despliegue, API_URL debe ser la URL pública
-de tu API en Render (ver TODO 0): es la que usará la app desplegada.
-
-Despliegue en Render (segundo Web Service, además del de la API):
-    Build Command:  pip install -r requirements.txt
-    Start Command:  streamlit run streamlit_app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
-
-Capturas (memoria): deben incluir el nombre del autor y la palabra P3
-(ej: Juan Perez P3). Rellena AUTORES más abajo para que salga en la interfaz.
-
-Pruebas desde la barra lateral (para la memoria, apartados b y e):
-    - Marcar "omitir HouseAge"                         -> validación local: no se envía nada.
-    - Marcar "omitir HouseAge" + "saltar la validación" -> la API responde 422.
-    - Cambiar la URL de la API por una incorrecta       -> fallo de comunicación.
-
-Contrato de la API:
-    POST /predict, cuerpo JSON con las 8 variables:
-        MedInc, HouseAge, AveRooms, AveBedrms, Population, AveOccup,
-        Latitude, Longitude
-    200  {"MedHouseVal": 4.53}  -> precio en CIENTOS DE MILES de dólares
-    422  {"detail": [...]}      -> falta un campo o tiene un tipo incorrecto
-    500  texto "Internal Server Error" (¡no es JSON!)
-"""
 import logging
 import time
 
@@ -158,10 +110,11 @@ if st.button("Estimar precio"):
         elapsed_ms = (time.perf_counter() - start) * 1000
     except requests.RequestException as exc:
         logger.error("Fallo de comunicación con %s: %s", api_url, exc)
-        # TODO 5a (apartado e): sustituye el mensaje por uno claro para el
-        # usuario (qué ha pasado y qué puede hacer). Este único except cubre
-        # cualquier fallo de comunicación (sin conexión, timeout...).
-        st.error("TODO 5a: no se pudo contactar con la API.")
+        # TODO 5a (apartado e): mensaje claro para el usuario
+        st.error(
+            "No se pudo conectar con el servicio de IA. Comprueba que la URL de la API "
+            "sea correcta y que el servidor en Render esté activo."
+            )
     else:
         logger.info("POST %s/predict -> HTTP %s en %.0f ms", api_url, response.status_code, elapsed_ms)
         if response.status_code == 200:
@@ -170,8 +123,5 @@ if st.button("Estimar precio"):
             st.caption(f"Valor devuelto por la API (sin formatear): {med_house_val}")
             st.metric("Precio estimado", format_price(med_house_val))
         else:
-            # TODO 5b (apartado e): muestra UN solo st.error claro para
-            # cualquier código distinto de 200 (422, 500...): indica el código
-            # y el detalle con response.text (no llames a response.json():
-            # en un 500 el cuerpo NO es JSON). Borra la línea de abajo.
-            raise NotImplementedError("Completa el TODO 5b: respuesta de error")
+            # TODO 5b (apartado e): error devuelto por la API (422, 500...)
+            st.error(f"Error {response.status_code} en la API: {response.text}")
